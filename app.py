@@ -25,7 +25,7 @@ def upload():
         file_path = os.path.join(upload_dir, fileitem.filename)
         fileitem.save(file_path)
         return render_template("home.html")
-
+    
     return 'File uploaded errors'
 
 if __name__ == "__main__":

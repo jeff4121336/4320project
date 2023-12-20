@@ -12,7 +12,7 @@ fetch('./audio')
             <audio controls>
                 <source src="/audio/${data.audio}" type="audio/wav"/>
             </audio>
-            `;        
+            `;
         } else {
             originalAudio.innerText = 'No audio file found.';
         }
