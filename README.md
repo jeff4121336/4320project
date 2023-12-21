@@ -15,6 +15,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+> Extra libraries
+
+If you encouter `warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)`, please install ffpemg in terminal (MacOS) 
+```python
+brew install ffmpeg
+```
+
+
 > Run the application
 
 ```python
