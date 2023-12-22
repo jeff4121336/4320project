@@ -1,7 +1,7 @@
 from pydub import AudioSegment
 import os
 import speech_recognition as sr
-from flask import Flask, flash, request, redirect, render_template, url_for
+from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
 
@@ -50,13 +50,13 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            audioToText(filename)
-            return redirect(request.url)
+            returnText = audioToText(filename)
+            return render_template("home.html", text=returnText
+                                , originalAudioLink= "http://127.0.0.1:3000/uploads/" + filename)
     return ''
 
 def audioToText(filename):
     recognizer = sr.Recognizer()
-
     audio = UPLOAD_FOLDER + '/' + filename
 
     with sr.AudioFile(audio) as source:
@@ -64,13 +64,18 @@ def audioToText(filename):
         try:
             text = recognizer.recognize_google(audio_data, language="en-US")
             print(f"You said: {text}")
-            return render_template("home.html", text=text, originalAudio=audio)
+            return text
         except sr.UnknownValueError:
             print("Sorry, I couldn't understand that.")
-            return render_template("home.html", text="Sorry, I couldn't understand that.", originalAudio=audio)
+            return "Sorry, I couldn't understand that."
         except sr.RequestError:
             print("Sorry, there was an error processing your request.")
-            return render_template("home.html", text="Sorry, there was an error processing your request.", originalAudio=audio)
+            return "Sorry, there was an error processing your request."
+
+# e.g. http://127.0.0.1:3000/uploads/OSR_us_000_0018_8k.wav
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000, debug=True)
