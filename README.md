@@ -31,4 +31,8 @@ Check the web application at `http://127.0.0.1:3000`
 
 > Reference 
 
-Data Source `http://www.manythings.org/bilingual/`
+Data Source 
+
+```python
+http://www.manythings.org/bilingual/
+```
