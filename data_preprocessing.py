@@ -2,7 +2,6 @@
 # Reference: https://towardsdatascience.com/how-to-build-an-encoder-decoder-translation-model-using-lstm-with-python-and-keras-a31e9d864b9b
 
 import string
-import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
@@ -60,7 +59,7 @@ max_chinese_len = int(len(max(chi_text_tokenized,key=len)))
 max_english_len = int(len(max(eng_text_tokenized,key=len)))
 
 chi_pad_sentence = pad_sequences(chi_text_tokenized, max_chinese_len, padding = "post")
-eng_pad_sentence = pad_sequences(eng_text_tokenized, max_english_len, padding = "post")
+eng_pad_sentence = pad_sequences(eng_text_tokenized, max_english_len, 
 
 # Reshape data
 chi_pad_sentence = chi_pad_sentence.reshape(*chi_pad_sentence.shape, 1)

@@ -2,12 +2,14 @@
 # and data_visualization.py to train or re-train the model.
 
 # libraries
+
 from keras.models import Model
 from keras.layers import LSTM, Input, TimeDistributed, Dense, Activation, RepeatVector, Embedding
 from keras.optimizers import Adam
 from keras.losses import sparse_categorical_crossentropy
+
 # use the variables in data_preprocessing.py
-from data_preprocessing import chinese_vocab, english_vocab, max_chinese_len, max_english_len, chi_pad_sentence, eng_pad_sentence
+from data_preprocessing import chinese_vocab, english_vocab, max_chinese_len, max_english_len, chi_pad_sentence, eng_pad_sentence, tokenize
 
 # Encoder
 input_sequence = Input(shape=(max_english_len,))
@@ -30,10 +32,10 @@ enc_dec_model.compile(loss=sparse_categorical_crossentropy,
 enc_dec_model.summary()
 
 # Model
-model_results = enc_dec_model.fit(eng_pad_sentence, chi_pad_sentence, batch_size=30, epochs=100)
+model_results = enc_dec_model.fit(eng_pad_sentence, chi_pad_sentence, batch_size=90, epochs=2)
 
 
-# Answer
+# # Answer
 # def logits_to_sentence(logits, tokenizer):
 
 #     index_to_words = {idx: word for word, idx in tokenizer.word_index.items()}
@@ -41,8 +43,8 @@ model_results = enc_dec_model.fit(eng_pad_sentence, chi_pad_sentence, batch_size
 
 #     return ' '.join([index_to_words[prediction] for prediction in np.argmax(logits, 1)])
 
-# index = 14
-# print("The english sentence is: {}".format(english_sentences[index]))
-# print("The spanish sentence is: {}".format(spanish_sentences[index]))
+# input_sentence = "The steps of data preprocessing should be included in this file."
+# print("The english sentence is: {}".format(input_sentence))
 # print('The predicted sentence is :')
-# print(logits_to_sentence(enc_dec_model.predict(spa_pad_sentence[index:index+1])[0], eng_text_tokenizer))
+# eng_text_tokenized, text_tokenizer = tokenize(input_sentence)
+# print(logits_to_sentence(enc_dec_model.predict(eng_text_tokenized, text_tokenizer)))
