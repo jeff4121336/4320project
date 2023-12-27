@@ -33,6 +33,10 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route("/", methods=['get'])
+def resetAll():
+    return render_template('home.html', translatedText="", text="", originalAudioLink="")
+
 @app.route('/', methods=['POST'])
 def upload_file():
     removePreviousFiles()
@@ -76,6 +80,12 @@ def audioToText(filename):
 @app.route('/uploads/<filename>')
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route("/translate", methods=['POST'])
+def translate():
+    forward_message = "Moving Forward..."
+    return render_template('home.html', translatedText=forward_message)
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000, debug=True)

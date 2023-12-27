@@ -1,10 +1,9 @@
 # The steps of data preprocessing should be included in this file.
 # Reference: https://towardsdatascience.com/how-to-build-an-encoder-decoder-translation-model-using-lstm-with-python-and-keras-a31e9d864b9b
-
 import string
+
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-
 # Path to translation file
 path_to_data = 'data/cmn.txt'
 
@@ -16,16 +15,18 @@ translation_file.close()
 # Parse data
 raw_data = raw_data.split('\n')
 pairs = [sentence.split('\t') for sentence in raw_data]
-pairs = pairs[0:25000]
+pairs = pairs[0:-1]
 
 def clean_sentence(sentence):
     # Lower case the sentence
     lower_case_sent = sentence.lower()
     # Strip punctuation
-    string_punctuation = string.punctuation + "¡" + '¿'
+    chinese_punctuation = "。" + "【" + "】"
+    string_punctuation = string.punctuation + chinese_punctuation
     clean_sentence = lower_case_sent.translate(str.maketrans('', '', string_punctuation))
    
     return clean_sentence
+
 
 def tokenize(sentences):
     # Create tokenizer
@@ -33,7 +34,6 @@ def tokenize(sentences):
     # Fit texts
     text_tokenizer.fit_on_texts(sentences)
     return text_tokenizer.texts_to_sequences(sentences), text_tokenizer
-
 
 # Clean sentences
 english_sentences = [clean_sentence(pair[0]) for pair in pairs]
@@ -43,11 +43,9 @@ chinese_sentences = [clean_sentence(pair[1]) for pair in pairs]
 chi_text_tokenized, chi_text_tokenizer = tokenize(chinese_sentences)
 eng_text_tokenized, eng_text_tokenizer = tokenize(english_sentences)
 
-# tokenized Chinese sentences, not original sentences
-print('Maximum length tokenized chinese sentence: {}'.format(len(max(chi_text_tokenized,key=len))))
-print('Maximum length tokenized english sentence: {}'.format(len(max(eng_text_tokenized,key=len))))
-print('Maximum length Chinese sentence: {}'.format(max(len(sentence) for sentence in english_sentences)))
-print('Maximum length English sentence: {}'.format(max(len(sentence) for sentence in chinese_sentences)))
+print('Maximum length chinese sentence: {}'.format(len(max(chi_text_tokenized,key=len))))
+print('Maximum length english sentence: {}'.format(len(max(eng_text_tokenized,key=len))))
+
 
 # Check language length
 chinese_vocab = len(chi_text_tokenizer.word_index) + 1

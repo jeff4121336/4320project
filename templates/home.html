@@ -53,7 +53,9 @@
         <div class="row">
             <div class="col-6">
                 <h5>Translated Audio</h5>
-                No Translation yet
+                <audio controls>
+                    <source src={{translatedAudioLink}} type="audio/wav"/>
+                </audio>
             </div>
             <div class="col-6">
                 <br>
@@ -61,14 +63,18 @@
                     <h5>Translated Text</h5>
                 </div>
                 <div class="row" style="margin: 1%">
-                    <textarea class="form-control" id="translatedTextBox" rows="3" readonly></textarea>
+                    <textarea class="form-control" id="translatedTextBox" rows="3" readonly>{{translatedText}}</textarea>
                 </div>
             </div>
         </div>
         <br>
-        <div class="row" style="margin: 2%">
-            <button type="button" class="btn btn-info" style="margin-bottom: 10px;">Translate</button>
-            <button type="button" class="btn btn-info" style="margin-bottom: 10px;">Reset All</button>
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 5px;">
+            <form action="/translate" method="post" style="margin: 1%;">
+              <button type="submit" class="btn btn-info">Translate</button>
+            </form>
+            <form action="/" method="get" style="margin: 1%;">
+              <button type="submit" class="btn btn-info">Reset All</button>
+            </form>
         </div>
     </div>
 </body>
