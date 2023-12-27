@@ -4,26 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <script type="text/javascript" src="static/script.js"></script>
-    <title> Language Translation </title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Language Translation</title>
 </head>
 <header>
     <div class="d-flex justify-content-between" style="margin: 1%">
-        <h4 style="margin-top: 6px;"> ✨ Language Translation for Audio Data ✨</h4>
+        <h4 style="margin-top: 6px;">✨ Language Translation for Audio Data ✨</h4>
         <h5 style="margin-top: 10px;">English to Chinese Version</h5>
     </div>
     <hr>
 </header>
-
 <body>
     <div class="container rounded" style="background-color: lightgrey;">
-        <div claas="row" style="padding: 10px 0px;">
-            <h5> Upload Audio File </h5>
+        <div class="row" style="padding: 10px 0px;">
+            <h5>Upload Audio File</h5>
             <div id="UploadAudioText">
                 <form method="post" enctype="multipart/form-data">
                     <input id="file" name="file" type="file" accept=".wav" required/>
                     <div>
-                        <small> Accepted File Type: .wav </small>
+                        <small>Accepted File Type: .wav</small>
                     </div>
                     <button id="uploadButton" type="submit" class="btn btn-primary">
                         Upload
@@ -38,8 +37,8 @@
             <div class="col-6">
                 <h5>Original Audio</h5>
                 <div id="originalAudio">
-                    <audio controls>
-                        <source src={{originalAudioLink}} type="audio/wav"/>
+                    <audio id="originalAudioPlayer" controls>
+                        <source id="originalAudioSource" src="{{originalAudioLink}}" type="audio/wav"/>
                     </audio>
                 </div>
             </div>
@@ -53,8 +52,8 @@
         <div class="row">
             <div class="col-6">
                 <h5>Translated Audio</h5>
-                <audio controls>
-                    <source src={{translatedAudioLink}} type="audio/wav"/>
+                <audio id="translatedAudioPlayer" controls>
+                    <source src="{{translatedAudioLink}}" type="audio/wav"/>
                 </audio>
             </div>
             <div class="col-6">
@@ -69,22 +68,27 @@
         </div>
         <br>
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 5px;">
-            <form action="/translate" method="post" style="margin: 1%;">
-              <button type="submit" class="btn btn-info">Translate</button>
-            </form>
-            <form action="/" method="get" style="margin: 1%;">
-              <button type="submit" class="btn btn-info">Reset All</button>
+            <form action="" method="get" style="margin: 1%;">
+                <button type="button" class="btn btn-info" onclick="resetAll()">Reset All</button>
             </form>
         </div>
     </div>
 </body>
 <hr>
-
 <footer>
     <div>
         Created by Yau Yuk Tung Jeff 1155158477
-        <br>
+       <br>
         IERG4320 Project Topic 1 - Translating English Audio to Chinese Audio
     </div>
 </footer>
 </html>
+<script>
+    function resetAll() {
+        document.getElementById('translatedTextBox').value = '';
+        document.getElementById('originalTextBox').value = '';
+        document.getElementById('originalAudioSource').setAttribute('src', '');
+        var audioPlayer = document.getElementById('originalAudioPlayer');
+        audioPlayer.load();
+    }
+</script>

@@ -1,11 +1,17 @@
 from pydub import AudioSegment
 import os
 import speech_recognition as sr
-from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory
+from flask import Flask, flash, request, redirect, render_template, url_for, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
-
+from bs4 import BeautifulSoup 
+import requests 
+from googletrans import Translator, constants
+from pprint import pprint
+from translate import Translator
+from gtts import gTTS
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def home():
@@ -14,11 +20,16 @@ def home():
 ALLOWED_EXTENSIONS = {'wav'}
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
+OUTPUT_FOLDER = os.path.join(path, 'output')
 
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 
+if not os.path.isdir(OUTPUT_FOLDER):
+    os.mkdir(OUTPUT_FOLDER)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
 
 def removePreviousFiles():
     for filename in os.listdir(UPLOAD_FOLDER):
@@ -33,31 +44,38 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/", methods=['get'])
-def resetAll():
-    return render_template('home.html', translatedText="", text="", originalAudioLink="")
-
 @app.route('/', methods=['POST'])
 def upload_file():
     removePreviousFiles()
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            returnText = audioToText(filename)
-            return render_template("home.html", text=returnText
-                                , originalAudioLink= "http://127.0.0.1:3000/uploads/" + filename)
-    return ''
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    # If the user does not select a file, the browser submits an
+    # empty file without a filename.
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        returnText = audioToText(filename)
+
+        translator = Translator(to_lang="zh")
+        if returnText == "":
+            translatedText = "Translation failed"
+        else:
+            translation = translator.translate(returnText)
+            translatedText = translation if translation is not None else "Translation failed"
+            # Delete the existing file if it exists
+            if os.path.exists("./output/output.wav"):
+                os.remove("./output/output.wav")
+            tts = gTTS(translatedText, lang='zh')
+            tts.save('./output/output.wav')
+
+    return render_template("home.html", text=returnText, originalAudioLink="http://127.0.0.1:3000/uploads/" + filename,
+                            translatedAudioLink="http://127.0.0.1:3000/output/output.wav", translatedText=translatedText)
 
 def audioToText(filename):
     recognizer = sr.Recognizer()
@@ -81,11 +99,9 @@ def audioToText(filename):
 def upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route("/translate", methods=['POST'])
-def translate():
-    forward_message = "Moving Forward..."
-    return render_template('home.html', translatedText=forward_message)
-
+@app.route('/output/<filename>')
+def output(filename):
+    return send_from_directory(app.config['OUTPUT_FOLDER'], filename)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000, debug=True)
