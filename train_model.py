@@ -1,3 +1,6 @@
+# Student ID: 1155158477
+# Name: YAU YUK TUNG
+
 # The main program, using all data_preprocessing,py, data_analysis.py 
 # and data_visualization.py to train or re-train the model.
 # libraries

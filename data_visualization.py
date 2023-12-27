@@ -1,3 +1,6 @@
+# Student ID: 1155158477
+# Name: YAU YUK TUNG
+
 # The steps of visualizing the data before and after the data analysis.
 from keras.models import load_model
 m = load_model('my_model.keras')

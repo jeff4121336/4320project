@@ -1,3 +1,6 @@
+# Student ID: 1155158477
+# Name: YAU YUK TUNG
+
 # The steps of data preprocessing should be included in this file.
 # Reference: https://towardsdatascience.com/how-to-build-an-encoder-decoder-translation-model-using-lstm-with-python-and-keras-a31e9d864b9b
 import string

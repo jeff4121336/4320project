@@ -1,3 +1,7 @@
+# Student ID: 1155158477
+# Name: YAU YUK TUNG
+
+
 import numpy as np
 from keras.models import Model, load_model
 from keras.layers import LSTM, Input, TimeDistributed, Dense, Activation, RepeatVector, Embedding

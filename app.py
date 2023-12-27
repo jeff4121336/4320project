@@ -1,3 +1,6 @@
+# Student ID: 1155158477
+# Name: YAU YUK TUNG
+
 from pydub import AudioSegment
 import os
 import speech_recognition as sr
