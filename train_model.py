@@ -22,17 +22,11 @@ decoder = LSTM(64, return_sequences=True, dropout=0.2)(r_vec)
 logits = TimeDistributed(Dense(chinese_vocab))(decoder)
 
 enc_dec_model = Model(input_sequence, Activation('softmax')(logits))
-enc_dec_model.compile(loss=sparse_categorical_crossentropy, optimizer=legacy.Adam(1e-3), metrics=['accuracy', 'mse'])
+enc_dec_model.compile(loss=sparse_categorical_crossentropy, optimizer=legacy.Adam(0.005), metrics=['accuracy', 'mse'])
 enc_dec_model.summary()
 
-results = enc_dec_model.fit(eng_pad_sentence, chi_pad_sentence, batch_size=16, epochs=30)
-# Save the trained model
+results = enc_dec_model.fit(eng_pad_sentence, chi_pad_sentence, batch_size=64, epochs=100)
 
-# enc_dec_model.save("my_model.keras")
-loss_values = results.history['loss']
-accuracy_values = results.history['accuracy']
-mse_values = results.history['mse']
+enc_dec_model.save("my_model.keras")
 
-# Print the loss and metric values for each epoch
-for epoch in range(len(loss_values)):
-    print(f"Epoch {epoch+1}: Loss = {loss_values[epoch]}, Accuracy = {accuracy_values[epoch]}, MSE = {mse_values[epoch]}")
+print("Training completed.")

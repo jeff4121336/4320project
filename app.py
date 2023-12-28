@@ -71,14 +71,18 @@ def upload_file():
         else:
             translation = translator.translate(returnText)
             translatedText = translation if translation is not None else "Translation failed"
-            # Delete the existing file if it exists
-            if os.path.exists("./output/output.wav"):
-                os.remove("./output/output.wav")
+            
+            for file_name in os.listdir(OUTPUT_FOLDER):
+                file_path = os.path.join(OUTPUT_FOLDER, file_name)
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+
+            file_path = os.path.join(OUTPUT_FOLDER, filename)
             tts = gTTS(translatedText, lang='zh')
-            tts.save('./output/output.wav')
+            tts.save(file_path)
 
     return render_template("home.html", text=returnText, originalAudioLink="http://127.0.0.1:3000/uploads/" + filename,
-                            translatedAudioLink="http://127.0.0.1:3000/output/output.wav", translatedText=translatedText)
+                            translatedAudioLink="http://127.0.0.1:3000/output/" + filename, translatedText=translatedText)
 
 def audioToText(filename):
     recognizer = sr.Recognizer()

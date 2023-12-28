@@ -49,7 +49,6 @@ eng_text_tokenized, eng_text_tokenizer = tokenize(english_sentences)
 print('Maximum length chinese sentence: {}'.format(len(max(chi_text_tokenized,key=len))))
 print('Maximum length english sentence: {}'.format(len(max(eng_text_tokenized,key=len))))
 
-
 # Check language length
 chinese_vocab = len(chi_text_tokenizer.word_index) + 1
 english_vocab = len(eng_text_tokenizer.word_index) + 1
@@ -65,3 +64,5 @@ eng_pad_sentence = pad_sequences(eng_text_tokenized, max_english_len, padding = 
 # Reshape data
 chi_pad_sentence = chi_pad_sentence.reshape(*chi_pad_sentence.shape, 1)
 eng_pad_sentence = eng_pad_sentence.reshape(*eng_pad_sentence.shape, 1)
+
+print("Data preprocessing completed.")
