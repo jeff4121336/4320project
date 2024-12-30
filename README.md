@@ -1,4 +1,4 @@
-# ierg4320projreal
+# Google Translation Project
 
 ### ✨ Quick Start
 
